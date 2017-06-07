@@ -62,36 +62,30 @@ public class GameManager : MonoBehaviour {
         if (hit.transform.GetComponent<CharacterStats>())
         {
             CharacterStats hitStats = hit.transform.GetComponent<CharacterStats>();
+            HandleSelectedUnitsArray(hitStats);
 
-            if(hitStats.team == playerTeam)
-            {
-                if(selectedUnit == null)
-                {
-                    selectedUnit = hitStats;
-                    selectedUnit.selected = true;
-                }
-                else
-                {
-                    selectedUnit.selected = false;
-                    selectedUnit = hitStats;
-                    selectedUnit.selected = true;
-                }
-            }
-            else
-            {
-                if(selectedUnit == null)
-                {
-                    //Add logic here for enemies FOV
-                }
-            }
+            //if(selectedUnit == null)
+            //{
+            //    selectedUnit = hitStats;
+            //    selectedUnit.selected = true;
+            //}
+            //else
+            //{
+            //    selectedUnit.selected = false;
+            //    selectedUnit = hitStats;
+            //    selectedUnit.selected = true;
+            //}
         }
         else
         {
-            if (selectedUnit)
+            if (selectedUnits.Count > 0)
             {
                 if (doubleClick)
                 {
-                    selectedUnit.run = true;
+                    foreach(CharacterStats charStat in selectedUnits)
+                    {
+                        charStat.run = true;
+                    }
                 }
                 else
                 {
@@ -99,7 +93,11 @@ public class GameManager : MonoBehaviour {
                     StartCoroutine("closeDoubleClick");
                 }
 
-                selectedUnit.MoveToPosition(hit.point);
+                foreach (CharacterStats charStat in selectedUnits)
+                {
+                    charStat.MoveToPosition(hit.point);
+                }
+                //selectedUnit.MoveToPosition(hit.point);
             }
         }
     }
@@ -110,11 +108,70 @@ public class GameManager : MonoBehaviour {
         doubleClick = false;
     }
 
+    void HandleSelectedUnitsArray(CharacterStats charStat)
+    {
+        if (!UnitIsAlreadyInSelectedUnits(charStat))
+        {
+            if (!Input.GetKey(KeyCode.LeftControl))
+            {
+                DeselcetUnit();
+            }
+
+            charStat.selected = true;
+            selectedUnits.Add(charStat);
+        }
+        else
+        {
+            RemoveUnitFromSelectedUnit(charStat);
+        }
+    }
+
     public void DeselcetUnit()
     {
-        selectedUnit.selected = false;
-        selectedUnit = null;
+        if(selectedUnits.Count > 0)
+        {
+            for (int i = 0; i < selectedUnits.Count; i++)
+            {
+                CharacterStats charStat = selectedUnits[i] as CharacterStats;
+                charStat.selected = false;
+                selectedUnits.Remove(charStat);
+            }
+        }
 
+        //if(selectedUnit != null)
+        //{
+        //    selectedUnit.selected = false;
+        //    selectedUnit = null;
+        //}
+    }
+
+    bool UnitIsAlreadyInSelectedUnits(CharacterStats charStat)
+    {
+        foreach (CharacterStats currentCharStat in selectedUnits)
+        {
+            if(currentCharStat == charStat)
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    void RemoveUnitFromSelectedUnit(CharacterStats charStat)
+    {
+        if (selectedUnits.Count > 0)
+        {
+            foreach (CharacterStats currentCharStat in selectedUnits)
+            {
+                if (currentCharStat == charStat)
+                {
+                    selectedUnits.Remove(currentCharStat);
+                }
+                return;
+            }
+        }
+        return;
     }
 
     public void EnterUIElement()
