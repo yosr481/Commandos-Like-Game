@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    [Header("Choosing Variables")]
     public CharacterStats selectedUnit;
     public static ArrayList selectedUnits = new ArrayList();
     public int playerTeam;
     public GameObject unitControl;
     public bool doubleClick;
     public bool overUIElement;
+
+    [Header("Camera Movment")]
     public GameObject cameraMover;
     public float cameraSpeed = 0.3f;
 
+    MouseManager mouseManager;
+
     void Start()
     {
-
+        mouseManager = GetComponent<MouseManager>();
     }
 
     void Update()
@@ -33,12 +38,15 @@ public class GameManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonUp(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if(Physics.Raycast(ray, out hit, 100))
+            if (!mouseManager.userIsDragging)
             {
-                CheckHit(hit);
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 100))
+                {
+                    CheckHit(hit);
+                }
             }
         }
 
@@ -122,7 +130,14 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            RemoveUnitFromSelectedUnit(charStat);
+            if(Input.GetKey(KeyCode.LeftControl))
+                RemoveUnitFromSelectedUnit(charStat);
+            else
+            {
+                DeselcetUnit();
+                charStat.selected = true;
+                selectedUnits.Add(charStat);
+            }
         }
     }
 

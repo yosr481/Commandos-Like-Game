@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\Enemy AI\EnemyUI.cs" />
     <Compile Include="Assets\Scripts\Managers\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\MouseManager.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterStats.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerControl.cs" />
     <Compile Include="Assets\Scripts\PointOfInterest.cs" />
