@@ -10,7 +10,14 @@ public class ControllableUnit : MonoBehaviour {
     public Vector2 screenPos;
     public bool onScreen;
     public bool selected = false;
-	
+
+    CharacterStats charStat;
+
+    void Awake()
+    {
+        charStat = GetComponent<CharacterStats>();
+    }
+
 	void Update () {
         if (!selected)
         {
@@ -19,7 +26,7 @@ public class ControllableUnit : MonoBehaviour {
             {
                 if (!onScreen)
                 {
-                    MouseManager.unitsOnScreen.Add(gameObject.GetComponent<CharacterStats>());
+                    MouseManager.unitsOnScreen.Add(charStat);
                     onScreen = true;
                 }
             }
@@ -27,14 +34,14 @@ public class ControllableUnit : MonoBehaviour {
             {
                 if (onScreen)
                 {
-                    MouseManager.RemoveFromOnScreenUnit(gameObject.GetComponent<CharacterStats>());
+                    MouseManager.RemoveFromOnScreenUnit(charStat);
                     onScreen = false;
                 }
             }
         }
         else
         {
-            gameObject.GetComponent<CharacterStats>().selected = true;
+            charStat.selected = true;
         }
 	}
 }

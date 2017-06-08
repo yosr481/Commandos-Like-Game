@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MouseManager : MonoBehaviour {
 
+    #region Variables
     public bool userIsDragging = false;
     public GUIStyle mouseDragSkin;
     public static ArrayList selectedUnits = new ArrayList();
@@ -13,6 +14,7 @@ public class MouseManager : MonoBehaviour {
     public bool doubleClick;
     public bool overUIElement;
     bool finishDragOnThisFrame;
+    bool startedDrag;
 
     static float timeLimitBeforDeclareDrag = .1f;
     static float timeLeftBeforeDeclareDrag;
@@ -28,14 +30,9 @@ public class MouseManager : MonoBehaviour {
     float boxTop;
     static Vector2 boxStart;
     static Vector2 boxFinish;
+    #endregion
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Update () {
 
         if (!overUIElement)
             HandleSelection();
@@ -52,6 +49,7 @@ public class MouseManager : MonoBehaviour {
             mouseDownPoint = hit.point;
             timeLeftBeforeDeclareDrag = timeLimitBeforDeclareDrag;
             mouseDragStart = Input.mousePosition;
+            startedDrag = true;
         }
         else if (Input.GetMouseButton(0))
         {
@@ -71,8 +69,6 @@ public class MouseManager : MonoBehaviour {
 
                 boxLeft = Input.mousePosition.x;
                 boxTop = (Screen.height - Input.mousePosition.y) - boxHeight;
-
-                //Debug.Log(boxStart.x + "," + boxFinish.x);
 
                 #region Calculate BoxStart and Finish
                 if (FloatToBool(boxWidth))
@@ -105,10 +101,16 @@ public class MouseManager : MonoBehaviour {
             if (userIsDragging)
             {
                 finishDragOnThisFrame = true;
-                timeLeftBeforeDeclareDrag = 0;
                 userIsDragging = false;
             }
             
+        }
+
+
+        if (!Input.GetKey(KeyCode.LeftControl) && startedDrag && userIsDragging)
+        {
+            DeselcetUnit();
+            startedDrag = false;
         }
         #endregion
     }
@@ -151,6 +153,15 @@ public class MouseManager : MonoBehaviour {
         }
     }
 
+    void OnGUI()
+    {
+        if (userIsDragging)
+        {
+            GUI.Box(new Rect(boxLeft, boxTop, boxWidth, boxHeight), "", mouseDragSkin);
+        }
+    }
+
+    #region Helper Functions
     void HandleSelection()
     {
         if (Input.GetMouseButtonUp(0))
@@ -290,14 +301,6 @@ public class MouseManager : MonoBehaviour {
         if (f < 0) return false; else return true;
     }
 
-    void OnGUI()
-    {
-        if (userIsDragging)
-        {
-            GUI.Box(new Rect(boxLeft, boxTop, boxWidth, boxHeight), "", mouseDragSkin);
-        }
-    }
-
     public static bool UnitsWithinScreenSpace(Vector2 unitScreenPos)
     {
         if ((unitScreenPos.x < Screen.width && unitScreenPos.y < Screen.height) && (unitScreenPos.x > 0 && unitScreenPos.y  > 0))
@@ -343,12 +346,7 @@ public class MouseManager : MonoBehaviour {
 
     public void PutDraggedUnitsInSelectedUnits()
     {
-        if (!Input.GetKey(KeyCode.LeftControl))
-        {
-            DeselcetUnit();
-        }
-
-        if(unitsInDragBox.Count > 0)
+        if (unitsInDragBox.Count > 0)
         {
             for (int i = 0; i < unitsInDragBox.Count; i++)
             {
@@ -377,6 +375,8 @@ public class MouseManager : MonoBehaviour {
             return false;
         }
     }
+
+    #endregion
 
     #region UI over mouse
     public void EnterUIElement()
