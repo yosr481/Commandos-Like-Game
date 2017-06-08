@@ -386,7 +386,7 @@ public class EnemyAI : MonoBehaviour {
                              * we can simply check if the player is crouching.
                              */
                             retVal = true;
-                            Debug.Log("Upper found");
+                            //Debug.Log("Upper found");
                         }
                     }
                 }

@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Camera\CameraMovmentWithMouse.cs" />
     <Compile Include="Assets\Scripts\Camera\Zoom.cs" />
+    <Compile Include="Assets\Scripts\ControllableUnit.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\CharacterStatsEnm.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemyControl.cs" />
