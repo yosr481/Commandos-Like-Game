@@ -7,7 +7,7 @@ public class MouseManager : MonoBehaviour {
     public bool userIsDragging = false;
     public GUIStyle mouseDragSkin;
 
-    static float timeLimitBeforDeclareDrag = 1;
+    static float timeLimitBeforDeclareDrag = .1f;
     static float timeLeftBeforeDeclareDrag;
     static Vector2 mouseDragStart;
     static Vector3 mouseUpPoint;
@@ -42,7 +42,7 @@ public class MouseManager : MonoBehaviour {
             if (!userIsDragging)
             {
                 timeLeftBeforeDeclareDrag -= Time.deltaTime;
-                if(timeLeftBeforeDeclareDrag <= 0 || UserDraggingByPosition(mouseDragStart, Input.mousePosition))
+                if(timeLeftBeforeDeclareDrag <= 0 /*|| UserDraggingByPosition(mouseDragStart, Input.mousePosition)*/)
                 {
                     userIsDragging = true;
                 }

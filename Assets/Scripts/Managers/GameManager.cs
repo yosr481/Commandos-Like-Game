@@ -149,8 +149,8 @@ public class GameManager : MonoBehaviour {
             {
                 CharacterStats charStat = selectedUnits[i] as CharacterStats;
                 charStat.selected = false;
-                selectedUnits.Remove(charStat);
             }
+            selectedUnits.Clear();
         }
 
         //if(selectedUnit != null)
