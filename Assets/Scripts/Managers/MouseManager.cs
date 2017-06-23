@@ -7,6 +7,7 @@ public class MouseManager : MonoBehaviour {
     #region Variables
     public bool userIsDragging = false;
     public GUIStyle mouseDragSkin;
+    public static CharacterStatsEnm[] enemies;
     public static ArrayList selectedUnits = new ArrayList();
     public static ArrayList unitsOnScreen = new ArrayList();
     public static ArrayList unitsInDragBox = new ArrayList();
@@ -31,6 +32,12 @@ public class MouseManager : MonoBehaviour {
     static Vector2 boxStart;
     static Vector2 boxFinish;
     #endregion
+
+    void Start()
+    {
+        enemies = GameObject.FindObjectsOfType<CharacterStatsEnm>();
+    }
+
 
     void Update () {
 
@@ -190,6 +197,15 @@ public class MouseManager : MonoBehaviour {
         {
             CharacterStats hitStats = hit.transform.GetComponent<CharacterStats>();
             HandleSelectedUnitsArray(hitStats);
+        }
+        else if (hit.transform.GetComponent<CharacterStatsEnm>())
+        {
+            foreach(CharacterStatsEnm charStatEnm in enemies)
+            {
+                charStatEnm.selected = false;
+            }
+            hit.transform.GetComponent<CharacterStatsEnm>().selected = true;
+
         }
         else
         {

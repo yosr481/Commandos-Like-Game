@@ -10,6 +10,7 @@ public class CharacterStatsEnm : MonoBehaviour {
     public float viewAngleLimit = 50;
     public int alertLevel;
     public int team;
+    public bool selected = false;
     public bool run;
     public bool dead;
     public bool crouch;
@@ -17,6 +18,7 @@ public class CharacterStatsEnm : MonoBehaviour {
     public bool aim;
     public bool shooting;
     public GameObject alertCube;
+    public GameObject viewIllustration;
     EnemyControl enControl;
     EnemyAI enAI;
 
@@ -40,6 +42,8 @@ public class CharacterStatsEnm : MonoBehaviour {
                 alertCube.GetComponent<MeshRenderer>().material.color = Color.red;
             }
         }
+
+        if (viewIllustration) viewIllustration.SetActive(selected);
 	}
 
     public void StopMoving()

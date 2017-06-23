@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\Enemy AI\EnemyControl.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemySightSphere.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemyUI.cs" />
+    <Compile Include="Assets\Scripts\Enemy AI\FieldOfView.cs" />
     <Compile Include="Assets\Scripts\Managers\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Managers\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MouseManager.cs" />
