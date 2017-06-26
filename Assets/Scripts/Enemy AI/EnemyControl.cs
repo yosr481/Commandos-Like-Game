@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(FieldOfView))]
 public class EnemyControl : MonoBehaviour {
 
     Animator anim;
@@ -38,8 +39,6 @@ public class EnemyControl : MonoBehaviour {
          agent.angularSpeed = 500;
          agent.autoBraking = false;
         InitRagdoll();
-
-        GetComponentInChildren<EnemySightSphere>().gameObject.layer = 2;
 	}
 	
 	// Update is called once per frame

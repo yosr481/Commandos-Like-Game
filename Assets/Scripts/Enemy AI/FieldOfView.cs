@@ -16,11 +16,17 @@ public class FieldOfView : MonoBehaviour {
     public float meshResolution;
     public int edgeResolveIterations;
     public float edgeDistanceThreshold;
+    public Material onAlertMaterial;
+    public Material onNormalMaterial;
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
 
+    EnemyAI enmAI;
+
     void Start()
     {
+        enmAI = GetComponent<EnemyAI>();
+
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
@@ -31,6 +37,8 @@ public class FieldOfView : MonoBehaviour {
     void LateUpdate()
     {
         DrawFieldOfView();
+        if (visibleUnits.Count > 0)
+            SendTargetToEnemyAI();
     }
 
     IEnumerator FindUnitsWithDelay(float delay)
@@ -115,7 +123,33 @@ public class FieldOfView : MonoBehaviour {
         viewMesh.vertices = vertices;
         viewMesh.triangles = triangles;
         viewMesh.RecalculateNormals();
+
+        if(enmAI.aiStates == EnemyAI.AIStates.patrol)
+        {
+            viewMeshFilter.gameObject.GetComponent<MeshRenderer>().material = onNormalMaterial;
+        }
+        else
+        {
+            viewMeshFilter.gameObject.GetComponent<MeshRenderer>().material = onAlertMaterial;
+        }
     }
+
+    void SendTargetToEnemyAI()
+    {
+        for (int i = 1; i < visibleUnits.Count; i++)
+        {
+            if(CalculateDistanceToUnit(visibleUnits[i]) < CalculateDistanceToUnit(visibleUnits[i - 1]))
+            {
+                enmAI.target = visibleUnits[i].GetComponent<CharacterStats>();
+            }
+        }
+    }
+
+    float CalculateDistanceToUnit(Transform unit)
+    {
+        return Vector3.Distance(transform.position, unit.position);
+    }
+
 
     ViewCastInfo ViewCast(float globalAngle)
     {

@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour {
     public CharacterStats target;
     public float sightDistance = 20;
     Vector3 lastKnownPosition;
+    FieldOfView fov;
 
     // General Behaviours variabls.
     [Header("General Behaviours")]
@@ -76,6 +77,7 @@ public class EnemyAI : MonoBehaviour {
         enmControl = GetComponent<EnemyControl>();
         agent = GetComponent<NavMeshAgent>();
         charStatEnm = GetComponent<CharacterStatsEnm>();
+        fov = GetComponent<FieldOfView>();
         charStatEnm.alert = false;
 
         enManager = GameObject.FindObjectOfType<EnemyManager>();
@@ -92,7 +94,7 @@ public class EnemyAI : MonoBehaviour {
             enManager.enemiesAvailableToChase.Add(charStatEnm);
         }
 
-        sightDistance = GetComponentInChildren<EnemySightSphere>().GetComponent<SphereCollider>().radius;
+        sightDistance = GetComponent<FieldOfView>().viewRadius;
 	}
 	
 	// Update is called once per frame
@@ -282,7 +284,7 @@ public class EnemyAI : MonoBehaviour {
             charStatEnm.run = true;
         }
 
-        if (!sightRaycast())
+        if (fov.visibleUnits == null)
         {
             if (target)
             {
@@ -328,84 +330,16 @@ public class EnemyAI : MonoBehaviour {
     {
         if (target)
         {
-            if (sightRaycast())
+            if (fov.visibleUnits.Count > 0)
             {
                 ChangeAIBehaviour("AI_State_HasTarget", 0);
             }
         }
     }
 
-    bool sightRaycast()
-    {
-        bool retVal = false;
-        RaycastHit hitTowardsLowerBody;
-        RaycastHit hitTowardsUpperBody;
-        float raycastDst = sightDistance + (sightDistance * 0.5f);
-        Vector3 targetPos = lastKnownPosition;
-
-        if (target)
-        {
-            targetPos = target.transform.position;
-        }
-
-        Vector3 raycastStart = transform.position + new Vector3(0, 1.6f, 0);
-        Vector3 direction = targetPos - raycastStart;
-
-        LayerMask excludeLayer = ~((1 << 9) | (1 << 10));   // Exclude ragdoll layers and enemies 
-
-        Debug.DrawRay(raycastStart, direction + new Vector3(0, 1, 0));
-        if(Physics.Raycast(raycastStart, direction + new Vector3(0, 1, 0), out hitTowardsLowerBody, raycastDst, excludeLayer))
-        {
-            if (hitTowardsLowerBody.transform.GetComponent<CharacterStats>())
-            {
-                if (target)
-                {
-                    if(hitTowardsLowerBody.transform.GetComponent<CharacterStats>() == target)
-                    {
-                        retVal = true;
-                    }
-                }
-            }
-
-            //Debug.Log("Lower raycast: " + hitTowardsLowerBody.transform.name);
-        }
-
-        if (!retVal)
-        {
-            direction += new Vector3(0, 1.6f, 0);
-
-            if (Physics.Raycast(raycastStart, direction + new Vector3(0, 1, 0), out hitTowardsUpperBody, raycastDst, excludeLayer))
-            {
-                if (target)
-                {
-                    if(hitTowardsUpperBody.transform == target.transform)
-                    {
-                        if (!target.crouch)
-                        {
-                            /* Instead of checking how big is the collidr,
-                             * we can simply check if the player is crouching.
-                             */
-                            retVal = true;
-                            //Debug.Log("Upper found");
-                        }
-                    }
-                }
-
-                //Debug.Log("Upper raycast: " + hitTowardsUpperBody.transform.name);
-            }
-        }
-
-        if (retVal)
-        {
-            lastKnownPosition = target.transform.position;
-        }
-
-        return retVal;
-    }
-
     void AttackBehaviour()
     {
-        if (sightRaycast())
+        if (fov.visibleUnits.Count > 0)
         {
             LookAtTarget(lastKnownPosition);
             charStatEnm.aim = true;
@@ -457,9 +391,9 @@ public class EnemyAI : MonoBehaviour {
     {
         charStatEnm.StopMoving();
 
-        if (sightRaycast())
+        if (fov.visibleUnits.Count > 0)
         {
-            if(charStatEnm.alertLevel < 10)
+            if(charStatEnm.alertLevel < 5)
             {
                 float dstToTarget = Vector3.Distance(transform.position, target.transform.position);
                 float multiplier = 1 + (dstToTarget * 0.1f);
