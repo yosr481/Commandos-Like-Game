@@ -17,7 +17,7 @@ public class MouseManager : MonoBehaviour {
     bool finishDragOnThisFrame;
     bool startedDrag;
 
-    static float timeLimitBeforDeclareDrag = .1f;
+    static float timeLimitBeforDeclareDrag = .12f;
     static float timeLeftBeforeDeclareDrag;
     static Vector2 mouseDragStart;
     static Vector3 mouseDownPoint;
@@ -169,6 +169,7 @@ public class MouseManager : MonoBehaviour {
     }
 
     #region Helper Functions
+
     void HandleSelection()
     {
         if (Input.GetMouseButtonUp(0))
@@ -196,7 +197,8 @@ public class MouseManager : MonoBehaviour {
         if (hit.transform.GetComponent<CharacterStats>())
         {
             CharacterStats hitStats = hit.transform.GetComponent<CharacterStats>();
-            HandleSelectedUnitsArray(hitStats);
+            /*if(!hitStats.isBeenCaught)*/
+                HandleSelectedUnitsArray(hitStats);
         }
         else if (hit.transform.GetComponent<CharacterStatsEnm>())
         {
@@ -206,6 +208,11 @@ public class MouseManager : MonoBehaviour {
             }
             hit.transform.GetComponent<CharacterStatsEnm>().selected = true;
 
+        }
+        else if (hit.transform.GetComponent<Cart>())
+        {
+            CharacterStats selectedUnit = selectedUnits[0] as CharacterStats;
+            selectedUnit.MoveToPosition(hit.transform.GetComponent<Cart>().pointToGetUp.position);
         }
         else
         {

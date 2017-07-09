@@ -12,6 +12,8 @@ public class CharacterStats : MonoBehaviour {
     public bool run;
     public bool dead;
     public bool crouch;
+    public bool isBeenChased;
+    public bool isBeenCaught;
     public GameObject selectedCube;
     PlayerControl plControl;
 

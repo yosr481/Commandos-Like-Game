@@ -20,12 +20,16 @@ public class FieldOfView : MonoBehaviour {
     public Material onNormalMaterial;
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
+    LineRenderer lineRenderer;
 
     EnemyAI enmAI;
 
     void Start()
     {
         enmAI = GetComponent<EnemyAI>();
+        lineRenderer = GetComponent<LineRenderer>();
+
+        lineRenderer.enabled = false;
 
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
@@ -52,6 +56,10 @@ public class FieldOfView : MonoBehaviour {
 
     void FindVisibleUnits()
     {
+        for (int i = 0; i < visibleUnits.Count; i++)
+        {
+            visibleUnits[i].GetComponent<CharacterStats>().isBeenChased = false;
+        }
         visibleUnits.Clear();
 
         Collider[] unitsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, unitMask);
@@ -136,13 +144,29 @@ public class FieldOfView : MonoBehaviour {
 
     void SendTargetToEnemyAI()
     {
-        for (int i = 1; i < visibleUnits.Count; i++)
+        int randomValue = Random.Range(0, visibleUnits.Count);
+
+        for (int i = 0; i < visibleUnits.Count; i++)
         {
-            if(CalculateDistanceToUnit(visibleUnits[i]) < CalculateDistanceToUnit(visibleUnits[i - 1]))
+            if(!visibleUnits[randomValue].GetComponent<CharacterStats>().isBeenChased)
             {
-                enmAI.target = visibleUnits[i].GetComponent<CharacterStats>();
+                enmAI.target = visibleUnits[randomValue].GetComponent<CharacterStats>();
+                visibleUnits[randomValue].GetComponent<CharacterStats>().isBeenChased = true;
+                //DrawLineTowardsTarget(visibleUnits[randomValue].position);
+                Debug.Log(visibleUnits[randomValue].name + " is been chased by " + gameObject.name);
             }
         }
+    }
+
+    void DrawLineTowardsTarget(Vector3 target)
+    {
+        lineRenderer.enabled = true;
+        lineRenderer.SetPosition(1, target);
+    }
+
+    void EraseLine()
+    {
+        lineRenderer.enabled = false;
     }
 
     float CalculateDistanceToUnit(Transform unit)

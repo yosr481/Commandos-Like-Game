@@ -90,6 +90,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Cart.cs" />
     <Compile Include="Assets\Scripts\ControllableUnit.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\CharacterStatsEnm.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemyAI.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Assets\Scripts\Enemy AI\EnemySightSphere.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemyUI.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\FieldOfView.cs" />
+    <Compile Include="Assets\Scripts\HidingSpot.cs" />
     <Compile Include="Assets\Scripts\Managers\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Managers\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MouseManager.cs" />

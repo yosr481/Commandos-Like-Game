@@ -45,7 +45,7 @@ public class PlayerControl : MonoBehaviour {
 	void Update () {
         run = charStats.run;
 
-        if (moveToPosition)
+        if (moveToPosition /*&& !charStats.isBeenCaught*/)
         {
             agent.Resume();
             agent.updateRotation = true;

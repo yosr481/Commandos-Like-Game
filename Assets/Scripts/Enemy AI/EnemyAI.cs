@@ -8,13 +8,13 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour {
 
     // Remember to change the ragdoll colliders to Raycast Ignore layer.
-    [Header("Search")]
+    [Header("Target")]
     public CharacterStats target;
     public float sightDistance = 20;
     Vector3 lastKnownPosition;
     FieldOfView fov;
 
-    // General Behaviours variabls.
+    // General Behaviours variables.
     [Header("General Behaviours")]
     public float delayTillNewBehaviour = 3;
     float _timerTillNewBehaviour;
@@ -25,6 +25,21 @@ public class EnemyAI : MonoBehaviour {
     public bool canChase;
     public int indexBehaviour = 0;
     public List<WaypointsBase> onAlertExtraBehaviours = new List<WaypointsBase>();
+
+    // Searching variables
+    [Header("Search")]
+    public bool decideBehaviour;
+    public float decideBehviourThreshold;
+    public float alertMultiplier;
+    public List<Transform> possibleHidingPlaces = new List<Transform>();
+    public List<Vector3> positionsAroundUnit = new List<Vector3>();
+    bool getPossibleHidingPositions;
+    bool populateListOfPositions;
+    bool searchAtPositions;
+    bool createSearchPositions;
+    int indexSearchPositions;
+    bool searchHidingSpots;
+    Transform targetHidingSpot;
 
     bool lookAtPOI;
     bool initAlert;
@@ -62,6 +77,7 @@ public class EnemyAI : MonoBehaviour {
         alert,
         onAlertBehaviours,
         hasTarget,
+        search,
         attack
     }
 
@@ -69,7 +85,6 @@ public class EnemyAI : MonoBehaviour {
     EnemyControl enmControl;
     NavMeshAgent agent;
     CharacterStatsEnm charStatEnm;
-
     EnemyManager enManager;
 
 	// Use this for initialization
@@ -80,7 +95,7 @@ public class EnemyAI : MonoBehaviour {
         fov = GetComponent<FieldOfView>();
         charStatEnm.alert = false;
 
-        enManager = GameObject.FindObjectOfType<EnemyManager>();
+        enManager = FindObjectOfType<EnemyManager>();
         enManager.allEnemies.Add(charStatEnm);
 
         if (onPatrol)
@@ -102,6 +117,7 @@ public class EnemyAI : MonoBehaviour {
         switch (aiStates)
         {
             case AIStates.patrol:
+                alertMultiplier = 1;
                 DecreaseAlertLevels();
                 PatrolBehaviour();
                 TargetAvailable();
@@ -121,6 +137,12 @@ public class EnemyAI : MonoBehaviour {
             case AIStates.hasTarget:
                 HasTargetBehaviour();
                 break;
+            case AIStates.search:
+                alertMultiplier = 0.3f;
+                TargetAvailable();
+                DecreaseAlertLevels();
+                SearchBehaviour();
+                break;
             case AIStates.attack:
                 AttackBehaviour();
                 break;
@@ -131,6 +153,8 @@ public class EnemyAI : MonoBehaviour {
     {
         Invoke(behaviour, delay);
     }
+
+    #region AIStatas
 
     void AI_State_Normal()
     {
@@ -168,10 +192,21 @@ public class EnemyAI : MonoBehaviour {
         _initCheck = false;
     }
 
+    void AI_State_Search()
+    {
+        aiStates = AIStates.search;
+        target = null;
+        goToPos = false;
+        lookAtPOI = false;
+        _initCheck = false;
+    }
+
     void AI_State_Attack()
     {
         aiStates = AIStates.attack;
     }
+
+    #endregion
 
     void PatrolBehaviour()
     {
@@ -198,7 +233,7 @@ public class EnemyAI : MonoBehaviour {
 
     void CheckWaypoint(WaypointsBase wp, int listCase)
     {
-        #region InitCheck
+        #region InitialCheck
         if (!_initCheck)
         {
             _lookAtTarget = wp.lookTorwards;
@@ -291,6 +326,21 @@ public class EnemyAI : MonoBehaviour {
                 lastKnownPosition = target.transform.position;
                 target = null;
             }
+            else
+            {
+                float distanceFromTagetPosition = Vector3.Distance(transform.position, lastKnownPosition);
+
+                if(distanceFromTagetPosition < 2)
+                {
+                    _timerTillNewBehaviour += Time.deltaTime;
+
+                    if(_timerTillNewBehaviour > delayTillNewBehaviour)
+                    {
+                        ChangeAIBehaviour("AI_State_Search", 0);
+                        _timerTillNewBehaviour = 0;
+                    }
+                }
+            }
         }
     }
 
@@ -337,13 +387,170 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
+    void SearchBehaviour()
+    {
+        if (!decideBehaviour)
+        {
+            int randomValue = Random.Range(0, 11);
+
+            if(randomValue < decideBehviourThreshold)
+            {
+                searchAtPositions = true;
+                Debug.Log(name + "Searching around unit");
+            }
+            else
+            {
+                searchHidingSpots = true;
+                Debug.Log(name + "Searching in hiding spots");
+            }
+
+            decideBehaviour = true;
+        }
+        else
+        {
+            #region SearchAtHidingSpots
+
+            if (searchHidingSpots)
+            {
+                if (!populateListOfPositions)
+                {
+                    possibleHidingPlaces.Clear();
+
+                    Collider[] allColliders = Physics.OverlapSphere(transform.position, 20);
+
+                    for (int i = 0; i < allColliders.Length; i++)
+                    {
+                        if (allColliders[i].GetComponent<HidingSpot>())
+                        {
+                            possibleHidingPlaces.Add(allColliders[i].transform);
+                        }
+                    }
+                    populateListOfPositions = true;
+                }
+                else if(possibleHidingPlaces.Count > 0)
+                {
+                    if (!targetHidingSpot)
+                    {
+                        int randomValue = Random.Range(0, possibleHidingPlaces.Count);
+
+                        targetHidingSpot = possibleHidingPlaces[randomValue];
+                    }
+                    else
+                    {
+                        charStatEnm.MoveToPosition(targetHidingSpot.position);
+
+                        Debug.Log(name + "Going to hiding spot");
+
+                        float distanceToTarget = Vector3.Distance(transform.position, targetHidingSpot.position);
+
+                        if(distanceToTarget < 2)
+                        {
+                            _timerTillNewBehaviour += Time.deltaTime;
+
+                            if(_timerTillNewBehaviour > delayTillNewBehaviour)
+                            {
+                                // Do Things and reset
+                                populateListOfPositions = false;
+                                targetHidingSpot = null;
+                                decideBehaviour = false;
+                                _timerTillNewBehaviour = 0;
+                            }
+                        }
+                    }
+                }
+                else    //else if(possibleHidingPlaces.Count > 0)
+                {
+                    // No hiding spots found near unit, search at positions instead
+                    Debug.Log(name + "No hiding spots found, cancel it and search at positions instead");
+                    searchAtPositions = true;
+                    populateListOfPositions = false;
+                    targetHidingSpot = null;
+                }
+            }
+            #endregion
+
+            #region SearchAtPositions
+
+            if (searchAtPositions)
+            {
+                if (!createSearchPositions)
+                {
+                    positionsAroundUnit.Clear();
+
+                    int randomValue = Random.Range(4, 10);
+
+                    for (int i = 0; i < randomValue; i++)
+                    {
+                        float offsetX = Random.Range(-10, 10);
+                        float offsetZ = Random.Range(-10, 10);
+
+                        Vector3 origionPosition = transform.position;
+                        origionPosition += new Vector3(offsetX, 0, offsetZ);
+
+                        NavMeshHit hit;
+
+                        if(NavMesh.SamplePosition(origionPosition,out hit, 5, NavMesh.AllAreas))
+                        {
+                            positionsAroundUnit.Add(hit.position);
+                        }
+                    }
+
+                    if(positionsAroundUnit.Count > 0)
+                    {
+                        indexSearchPositions = 0;
+                        createSearchPositions = true;
+                        // else try again until you finf one.
+                    }
+                }
+                else
+                {
+                    Vector3 targetPosition = positionsAroundUnit[indexSearchPositions];
+
+                    Debug.Log(name + "Going to position");
+
+                    charStatEnm.MoveToPosition(targetPosition);
+
+                    float distanceToPosition = Vector3.Distance(transform.position, targetPosition);
+
+                    if(distanceToPosition < 2)
+                    {
+                        int randomValue = Random.Range(0, 11);
+                        decideBehaviour = (randomValue < 5);
+
+                        if(indexSearchPositions < positionsAroundUnit.Count - 1)
+                        {
+                            _timerTillNewBehaviour += Time.deltaTime;
+
+                            if(_timerTillNewBehaviour > delayTillNewBehaviour)
+                            {
+                                indexSearchPositions++;
+                                _timerTillNewBehaviour = 0;
+                            }
+                        }
+                        else
+                        {
+                            _timerTillNewBehaviour += Time.deltaTime;
+
+                            if(_timerTillNewBehaviour > delayTillNewBehaviour)
+                            {
+                                indexSearchPositions = 0;
+                                _timerTillNewBehaviour = 0;
+                            }
+                        }
+                    }
+                }
+            }
+            #endregion
+        }
+    }
+
     void AttackBehaviour()
     {
         if (fov.visibleUnits.Count > 0)
         {
-            LookAtTarget(lastKnownPosition);
+            LookAtTarget(target.transform.position);
+            charStatEnm.MoveToPosition(target.transform.position);
             charStatEnm.aim = true;
-            // Add shooting behaviour.
         }
         else
         {
@@ -398,7 +605,7 @@ public class EnemyAI : MonoBehaviour {
                 float dstToTarget = Vector3.Distance(transform.position, target.transform.position);
                 float multiplier = 1 + (dstToTarget * 0.1f);
                 // How fast it recognises it's an enemy is based on distance.
-                // Can add extr behaviours here, based on the unit's morale/experience/health/difficulty etc.
+                // Can add extra behaviours here, based on the unit's morale/experience/health/difficulty etc.
 
                 alertTimer += Time.deltaTime * multiplier;
                 if(alertTimer > alertTimerIncrement)
@@ -418,7 +625,7 @@ public class EnemyAI : MonoBehaviour {
         {
             if(charStatEnm.alertLevel > 5)
             {
-                ChangeAIBehaviour("AI_State_Chase", 0);
+                ChangeAIBehaviour("AI_State_Search", 0);
                 pointOfInterest = lastKnownPosition;
             }
             else
@@ -441,12 +648,20 @@ public class EnemyAI : MonoBehaviour {
     {
         if(charStatEnm.alertLevel > 0)
         {
-            alertTimer += Time.deltaTime;
+            alertTimer += Time.deltaTime * alertMultiplier;
 
             if(alertTimer > alertTimerIncrement * 2)
             {
                 charStatEnm.alertLevel--;
                 alertTimer = 0;
+            }
+        }
+
+        if(charStatEnm.alertLevel == 0)
+        {
+            if(aiStates != AIStates.patrol)
+            {
+                ChangeAIBehaviour("AI_State_Normal", 0);
             }
         }
     }
