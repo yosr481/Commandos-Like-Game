@@ -548,9 +548,14 @@ public class EnemyAI : MonoBehaviour {
     {
         if (fov.visibleUnits.Count > 0)
         {
-            LookAtTarget(target.transform.position);
-            charStatEnm.MoveToPosition(target.transform.position);
-            charStatEnm.aim = true;
+            if (!goToPos)
+            {
+                LookAtTarget(target.transform.position);
+                charStatEnm.MoveToPosition(target.transform.position);
+                //charStatEnm.aim = true;
+                charStatEnm.run = true;
+                goToPos = true;
+            } 
         }
         else
         {

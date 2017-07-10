@@ -7,6 +7,7 @@ public class CameraManager : MonoBehaviour {
     [Header("Camera Movment")]
     public GameObject cameraGameObject;
     public float cameraSpeed = 0.3f;
+    public bool canMove = true;
 
     float mouseX;
     float mouseY;
@@ -19,10 +20,16 @@ public class CameraManager : MonoBehaviour {
     void LateUpdate()
     {
         HandleMouseRotation();
-        HandleCameraMovment();
+        if(canMove)
+            HandleCameraMovment();
 
         mouseX = Input.mousePosition.x;
         mouseY = Input.mousePosition.y;
+    }
+
+    public void MoveToPosition(Vector3 pos)
+    {
+        transform.position = pos;
     }
 
     public void HandleMouseRotation()

@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cart : MonoBehaviour {
+public class GetUpPoint : MonoBehaviour {
 
-    public Transform pointToGetUp;
     public Transform seat;
 
-	void OnTriggerEnter(Collider coll)
+    void OnTriggerEnter(Collider coll)
     {
         if (coll.GetComponent<CharacterStats>())
         {
-            coll.transform.position = seat.position + Vector3.up;
+            coll.GetComponent<CharacterStats>().StartRiding();
         }
     }
 }

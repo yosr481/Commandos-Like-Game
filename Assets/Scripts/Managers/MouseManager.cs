@@ -48,6 +48,7 @@ public class MouseManager : MonoBehaviour {
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
             currentMousePoint = hit.point;
+            CheckControllableObjects(hit);
         }
 
         #region Mouse drag.
@@ -179,7 +180,7 @@ public class MouseManager : MonoBehaviour {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit, 100))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                 {
                     CheckHit(hit);
                 }
@@ -189,6 +190,36 @@ public class MouseManager : MonoBehaviour {
         if (Input.GetMouseButtonDown(1))
         {
             DeselcetUnit();
+        }
+    }
+
+    void CheckControllableObjects(RaycastHit hit)
+    {
+        if (hit.transform.gameObject.GetComponent<Cart>())
+        {
+            Cart currentCart = hit.transform.gameObject.GetComponent<Cart>();
+            currentCart.selected = true;
+            if (Input.GetMouseButton(0))
+            {
+                currentCart.pressed = true;
+            }
+        }
+        else
+        {
+            Cart[] allCarts = GameObject.FindObjectsOfType<Cart>();
+
+            foreach(Cart c in allCarts)
+            {
+                if(!c.pressed)
+                    c.selected = false;
+            }
+            if (Input.GetMouseButton(0))
+            {
+                foreach (Cart c in allCarts)
+                {
+                    c.pressed = false;
+                }
+            }
         }
     }
 
@@ -211,8 +242,23 @@ public class MouseManager : MonoBehaviour {
         }
         else if (hit.transform.GetComponent<Cart>())
         {
-            CharacterStats selectedUnit = selectedUnits[0] as CharacterStats;
-            selectedUnit.MoveToPosition(hit.transform.GetComponent<Cart>().pointToGetUp.position);
+            if(selectedUnits.Count == 1)
+            {
+                CharacterStats selectedUnit = selectedUnits[0] as CharacterStats;
+                Cart currentCart = hit.transform.gameObject.GetComponent<Cart>();
+
+                if (doubleClick)
+                {
+                    selectedUnit.run = true;
+                }
+                else
+                {
+                    doubleClick = true;
+                    StartCoroutine("closeDoubleClick");
+                }
+
+                selectedUnit.MoveToPosition(currentCart.pointToGetUp.position);
+            }  
         }
         else
         {

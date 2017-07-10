@@ -27,9 +27,12 @@ public class CharacterStats : MonoBehaviour {
             selectedCube.SetActive(selected);
 
         if (run) crouch = false;
-
-
 	}
+
+    public void StartRiding()
+    {
+
+    }
 
     public void MoveToPosition(Vector3 pos)
     {
