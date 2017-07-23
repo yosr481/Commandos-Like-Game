@@ -10,8 +10,10 @@ public class Zoom : MonoBehaviour {
     public float smooth = 5;
 
     Camera cam;
+    CameraManager camManager;
 	void Start () {
         cam = GetComponent<Camera>();
+        camManager = GetComponentInParent<CameraManager>();
 	}
 	
 	void Update () {
@@ -24,6 +26,7 @@ public class Zoom : MonoBehaviour {
             else if(cam.orthographicSize == zoomOut)
             {
                 cam.orthographicSize = normal;
+                camManager.cameraSpeed = 0.3f;
             }
         }
         else if(Input.GetAxis("Mouse ScrollWheel") < 0)
@@ -31,10 +34,12 @@ public class Zoom : MonoBehaviour {
             if (cam.orthographicSize == zoomIn)
             {
                 cam.orthographicSize = normal;
+                camManager.cameraSpeed = 0.3f;
             }
             else if (cam.orthographicSize == normal)
             {
                 cam.orthographicSize = zoomOut;
+                camManager.cameraSpeed = 0.6f;
             }
         }
 	}

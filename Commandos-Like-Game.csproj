@@ -90,23 +90,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Cart.cs" />
-    <Compile Include="Assets\Scripts\ControllableUnit.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\CharacterStatsEnm.cs" />
+    <Compile Include="Assets\Scripts\Enemy AI\ControllableUnit.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemyControl.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemySightSphere.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\EnemyUI.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\FieldOfView.cs" />
-    <Compile Include="Assets\Scripts\GetUpPoint.cs" />
-    <Compile Include="Assets\Scripts\HidingSpot.cs" />
-    <Compile Include="Assets\Scripts\Horse.cs" />
+    <Compile Include="Assets\Scripts\Enemy AI\HidingSpot.cs" />
+    <Compile Include="Assets\Scripts\Enemy AI\PointOfInterest.cs" />
+    <Compile Include="Assets\Scripts\Horse &amp; Cart\Cart.cs" />
+    <Compile Include="Assets\Scripts\Horse &amp; Cart\GetUpPoint.cs" />
+    <Compile Include="Assets\Scripts\Horse &amp; Cart\Horse.cs" />
     <Compile Include="Assets\Scripts\Managers\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Managers\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MouseManager.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterStats.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerControl.cs" />
-    <Compile Include="Assets\Scripts\PointOfInterest.cs" />
     <Compile Include="Assets\Scripts\Zoom.cs" />
   </ItemGroup>
   <ItemGroup>

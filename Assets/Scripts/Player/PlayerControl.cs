@@ -8,6 +8,7 @@ public class PlayerControl : MonoBehaviour {
     Animator anim;
     NavMeshAgent agent;
     CharacterStats charStats;
+    Rigidbody rigid;
 
     public float stopDistance;
     public bool moveToPosition;
@@ -25,12 +26,16 @@ public class PlayerControl : MonoBehaviour {
     float targetStance;
     float stance;
 
-	// Use this for initialization
-	void Start () {
+    Horse horse;
+
+    // Use this for initialization
+    void Start () {
+        rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         SetupAnimator();
         agent = GetComponent<NavMeshAgent>();
         charStats = GetComponent<CharacterStats>();
+        horse = FindObjectOfType<Horse>();
         agent.stoppingDistance = stopDistance - .1f;
 
         agent.updateRotation = true;
@@ -86,6 +91,13 @@ public class PlayerControl : MonoBehaviour {
                 break; // If you find the first animator, stop searching.
             }
         }
+    }
+
+    void OnRegularState(Transform getDownPoint)
+    {
+        agent.enabled = true;
+        rigid.isKinematic = false;
+        transform.position = getDownPoint.position;
     }
 
     void HandleSpeed()

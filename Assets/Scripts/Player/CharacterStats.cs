@@ -14,6 +14,7 @@ public class CharacterStats : MonoBehaviour {
     public bool crouch;
     public bool isBeenChased;
     public bool isBeenCaught;
+    public bool isRiding = false;
     public GameObject selectedCube;
     PlayerControl plControl;
 
@@ -29,9 +30,9 @@ public class CharacterStats : MonoBehaviour {
         if (run) crouch = false;
 	}
 
-    public void StartRiding()
+    public void StartRiding(Transform seatPoint)
     {
-
+        isRiding = true;  
     }
 
     public void MoveToPosition(Vector3 pos)

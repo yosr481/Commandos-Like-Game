@@ -343,7 +343,7 @@ public class MouseManager : MonoBehaviour {
         return false;
     }
 
-    void RemoveUnitFromSelectedUnit(CharacterStats charStat)
+    public static void RemoveUnitFromSelectedUnit(CharacterStats charStat)
     {
         if (selectedUnits.Count > 0)
         {

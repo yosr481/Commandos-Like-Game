@@ -1,0 +1,15 @@
+diff a/Assets/Scripts/Player/CharacterStats.cs b/Assets/Scripts/Player/CharacterStats.cs	(rejected hunks)
+@@ -27,9 +27,12 @@
+             selectedCube.SetActive(selected);
+ 
+         if (run) crouch = false;
++	}
+ 
++    public void StartRiding()
++    {
+ 
+-	}
++    }
+ 
+     public void MoveToPosition(Vector3 pos)
+     {

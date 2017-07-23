@@ -54,10 +54,29 @@ public class FieldOfView : MonoBehaviour {
         }     
     }
 
+    public void RemoveUnitFromVisibleUnits(CharacterStats unit)
+    {
+        if(visibleUnits.Count > 0)
+        {
+            for (int i = 0; i < visibleUnits.Count; i++)
+            {
+                if (visibleUnits[i].GetComponent<CharacterStats>() == unit)
+                {
+                    visibleUnits.Remove(visibleUnits[i]);
+                }
+                return;
+            }
+        }
+    }
+
     void FindVisibleUnits()
     {
         for (int i = 0; i < visibleUnits.Count; i++)
         {
+            if (visibleUnits[i].GetComponent<CharacterStats>().isRiding)
+            {
+                RemoveUnitFromVisibleUnits(visibleUnits[i].GetComponent<CharacterStats>());
+            }
             visibleUnits[i].GetComponent<CharacterStats>().isBeenChased = false;
         }
         visibleUnits.Clear();
@@ -148,6 +167,11 @@ public class FieldOfView : MonoBehaviour {
 
         for (int i = 0; i < visibleUnits.Count; i++)
         {
+            if (visibleUnits[i].GetComponent<CharacterStats>().isRiding)
+            {
+                RemoveUnitFromVisibleUnits(visibleUnits[i].GetComponent<CharacterStats>());
+                enmAI.aiStates = EnemyAI.AIStates.search;
+            }
             if(!visibleUnits[randomValue].GetComponent<CharacterStats>().isBeenChased)
             {
                 enmAI.target = visibleUnits[randomValue].GetComponent<CharacterStats>();
