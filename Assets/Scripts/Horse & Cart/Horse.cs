@@ -10,7 +10,7 @@ public class Horse : MonoBehaviour {
 
     Camera cam;
     CameraManager camManager;
-    Cart cart;
+    //Cart cart;
     Animator anim;
     Rigidbody rigid;
 
@@ -20,9 +20,9 @@ public class Horse : MonoBehaviour {
 	void Start () {
         cam = FindObjectOfType<Camera>();
         camManager = cam.gameObject.GetComponentInParent<CameraManager>();
-        cart = FindObjectOfType<Cart>();
+        //cart = FindObjectOfType<Cart>();
         anim = GetComponent<Animator>();
-        rigid = cart.gameObject.GetComponent<Rigidbody>();
+        //rigid = cart.gameObject.GetComponent<Rigidbody>();
 
     }
 	
@@ -40,11 +40,11 @@ public class Horse : MonoBehaviour {
             {
                 transform.Translate(Vector3.forward * vertical * speed * Time.deltaTime);
                 anim.SetBool("RidingMode", true);
-                cart.Ride();
+                //cart.Ride();
             }           
             else
             {
-                cart.Brake();
+                //cart.Brake();
                 anim.SetBool("RidingMode", false);
             }   
 

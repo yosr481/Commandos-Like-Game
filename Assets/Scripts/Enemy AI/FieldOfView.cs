@@ -27,12 +27,14 @@ public class FieldOfView : MonoBehaviour {
     void Start()
     {
         enmAI = GetComponent<EnemyAI>();
-        lineRenderer = GetComponent<LineRenderer>();
+        //lineRenderer = GetComponent<LineRenderer>();
 
-        lineRenderer.enabled = false;
+        //lineRenderer.enabled = false;
 
-        viewMesh = new Mesh();
-        viewMesh.name = "View Mesh";
+        viewMesh = new Mesh
+        {
+            name = "View Mesh"
+        };
         viewMeshFilter.mesh = viewMesh;
 
         StartCoroutine("FindUnitsWithDelay", .2f);
