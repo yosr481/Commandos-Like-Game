@@ -20,7 +20,7 @@ public class FieldOfView : MonoBehaviour {
     public Material onNormalMaterial;
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
-    LineRenderer lineRenderer;
+    //LineRenderer lineRenderer;
 
     EnemyAI enmAI;
 
@@ -184,7 +184,7 @@ public class FieldOfView : MonoBehaviour {
         }
     }
 
-    void DrawLineTowardsTarget(Vector3 target)
+    /*void DrawLineTowardsTarget(Vector3 target)
     {
         lineRenderer.enabled = true;
         lineRenderer.SetPosition(1, target);
@@ -193,7 +193,7 @@ public class FieldOfView : MonoBehaviour {
     void EraseLine()
     {
         lineRenderer.enabled = false;
-    }
+    }*/
 
     float CalculateDistanceToUnit(Transform unit)
     {

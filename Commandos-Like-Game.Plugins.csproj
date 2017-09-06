@@ -168,6 +168,7 @@
     <Compile Include="Assets\Standard Assets\Utility\WaypointProgressTracker.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Cinemachine\license.txt" />
     <None Include="Assets\Horse\SoftAlpha.shader" />
     <None Include="Assets\Metarials\Textures\Additive Tinted.shader" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
