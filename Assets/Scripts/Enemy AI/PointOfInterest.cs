@@ -6,7 +6,8 @@ public class PointOfInterest : MonoBehaviour {
 
     public bool creatPintOfInterest;
 
-    public List<CharacterStatsEnm> affectedChars = new List<CharacterStatsEnm>();
+    [SerializeField]
+    List<CharacterStatsEnm> affectedChars = new List<CharacterStatsEnm>();
 
 	void Update () {
         if (creatPintOfInterest)

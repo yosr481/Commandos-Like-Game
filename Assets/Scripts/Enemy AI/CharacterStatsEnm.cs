@@ -68,7 +68,7 @@ public class CharacterStatsEnm : MonoBehaviour {
     public void ChangeToAlert(Vector3 poi)
     {
         alert = true;
-        enControl.moveToPosition = false;
+        enControl.moveToPosition = true;
 
         enAI.GoOnAlert(poi);
     }

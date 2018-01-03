@@ -140,7 +140,7 @@ public class MouseManager : MonoBehaviour {
                     {
                         unitObj.selected = true;
                         unitsInDragBox.Add(unitObj);
-                        Debug.Log(unitsInDragBox.Count);
+                        //Debug.Log(unitsInDragBox.Count);
                     }
                     else
                     {

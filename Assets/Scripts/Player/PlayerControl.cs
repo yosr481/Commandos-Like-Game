@@ -52,7 +52,7 @@ public class PlayerControl : MonoBehaviour {
 
         if (moveToPosition /*&& !charStats.isBeenCaught*/)
         {
-            agent.Resume();
+            //agent.Resume();
             agent.updateRotation = true;
             agent.SetDestination(destPosition);
 
@@ -66,7 +66,7 @@ public class PlayerControl : MonoBehaviour {
         }
         else
         {
-            agent.Stop();
+            //agent.Stop();
             agent.updateRotation = false;
         }
 

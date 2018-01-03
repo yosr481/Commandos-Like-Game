@@ -179,7 +179,7 @@ public class FieldOfView : MonoBehaviour {
                 enmAI.target = visibleUnits[randomValue].GetComponent<CharacterStats>();
                 visibleUnits[randomValue].GetComponent<CharacterStats>().isBeenChased = true;
                 //DrawLineTowardsTarget(visibleUnits[randomValue].position);
-                Debug.Log(visibleUnits[randomValue].name + " is been chased by " + gameObject.name);
+                //Debug.Log(visibleUnits[randomValue].name + " is been chased by " + gameObject.name);
             }
         }
     }

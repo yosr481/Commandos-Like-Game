@@ -47,7 +47,7 @@ public class EnemyControl : MonoBehaviour {
 
         if (moveToPosition)
         {
-            agent.Resume();
+            agent.isStopped = false;
             agent.updateRotation = true;
             agent.SetDestination(destPosition);
 
@@ -61,7 +61,7 @@ public class EnemyControl : MonoBehaviour {
         }
         else
         {
-            agent.Stop();
+            agent.isStopped = true;
             agent.updateRotation = false;
         }
 
