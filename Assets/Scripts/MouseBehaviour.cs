@@ -19,8 +19,17 @@ public class MouseBehaviour : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if(Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
+                Debug.Log(hit.point);
                 CheckHit(hit);
             }
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            foreach (GameObject o in selectedPlayers)
+            {
+                o.GetComponent<PlayerController>().selected = false;
+            }
+            selectedPlayers.Clear();
         }
 	}
 
@@ -28,7 +37,6 @@ public class MouseBehaviour : MonoBehaviour {
     {
         if(hit.transform.tag == "Player")
         {
-            //selectedPlayers.Clear();
             selectedPlayers.Add(hit.transform.gameObject);
             foreach (GameObject o in selectedPlayers)
             {
@@ -39,9 +47,9 @@ public class MouseBehaviour : MonoBehaviour {
         {
             foreach(GameObject o in selectedPlayers)
             {
-                o.GetComponent<PlayerController>().selected = false;
+                o.GetComponent<PlayerController>().hitPoint = hit.point;
+                o.GetComponent<PlayerController>().MoveToPosition(hit.point);
             }
-            selectedPlayers.Clear();
         }
     }
 }

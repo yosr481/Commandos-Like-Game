@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CamMovement : MonoBehaviour {
 
     public Transform mainCamera;
-    public float movingAmount = 5;
+    public float movingSpeed = 5;
 
     bool moveRight = false;
     bool moveLeft = false;
@@ -16,13 +16,13 @@ public class CamMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(moveRight)
-            mainCamera.Translate(new Vector3(movingAmount * Time.deltaTime, 0, 0));
+            mainCamera.Translate(new Vector3(movingSpeed * Time.deltaTime, 0, 0));
         if (moveLeft)
-            mainCamera.Translate(new Vector3(-movingAmount * Time.deltaTime, 0, 0));
+            mainCamera.Translate(new Vector3(-movingSpeed * Time.deltaTime, 0, 0));
         if (moveUp)
-            mainCamera.Translate(new Vector3(0, movingAmount * Time.deltaTime, 0));
+            mainCamera.Translate(new Vector3(0, movingSpeed * Time.deltaTime, 0));
         if (moveDown)
-            mainCamera.Translate(new Vector3(0, -movingAmount * Time.deltaTime, 0));
+            mainCamera.Translate(new Vector3(0, -movingSpeed * Time.deltaTime, 0));
     }
 
     public void MoveingRight()

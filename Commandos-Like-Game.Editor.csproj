@@ -307,6 +307,10 @@
       <Project>{47676AD9-B64B-5B51-D36B-3FFB6453A960}</Project>
       <Name>Commandos-like-game</Name>
     </ProjectReference>
+    <ProjectReference Include="Commandos-like-game.unityproj">
+      <Project>{47676AD9-B64B-5B51-D36B-3FFB6453A960}</Project>
+      <Name>Commandos-like-game</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\OldGame\Cinemachine\Base\Editor\Editors\CinemachineBasicMultiChannelPerlinEditor.cs" />
